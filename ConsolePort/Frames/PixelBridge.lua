@@ -7,25 +7,44 @@ local _, db = ...
 local Bridge = CreateFrame('Frame', 'ConsolePortPixelBridge', WorldFrame)
 
 -- Pixel Bridge Configuration
-local PIXEL_SIZE  = 4 -- We use 8x8 blocks as established for reliability
-local FRAME_WIDTH = PIXEL_SIZE * 2
-local FRAME_HEIGHT = 1
+-- Sizes are in physical screen pixels (see UpdatePixelScale). Blocks are square
+-- and big enough that WoWpadX can sample their centers, away from blended edges
+-- caused by HD resolutions, UI scale, DPI scaling or post-processing.
+local PIXEL_SIZE   = 6
+local FRAME_WIDTH  = PIXEL_SIZE * 2
+local FRAME_HEIGHT = PIXEL_SIZE
 
 Bridge:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
 Bridge:SetPoint('TOPLEFT', 0, 0)
 Bridge:SetFrameStrata('TOOLTIP')
-Bridge:SetScale(1)
-Bridge:SetBackdrop({ bgFile = [[Interface\Buttons\WHITE8X8]] })
+Bridge:SetFrameLevel(100)
 
 -- Beacon (Left Block)
 Bridge.Beacon = Bridge:CreateTexture(nil, 'OVERLAY')
 Bridge.Beacon:SetSize(PIXEL_SIZE, FRAME_HEIGHT)
-Bridge.Beacon:SetPoint('LEFT')
+Bridge.Beacon:SetPoint('TOPLEFT')
 
 -- Data (Right Block)
 Bridge.Data = Bridge:CreateTexture(nil, 'OVERLAY')
 Bridge.Data:SetSize(PIXEL_SIZE, FRAME_HEIGHT)
-Bridge.Data:SetPoint('RIGHT')
+Bridge.Data:SetPoint('TOPLEFT', Bridge.Beacon, 'TOPRIGHT')
+
+-- Make 1 frame unit == 1 physical pixel, regardless of resolution / UI scale.
+function Bridge:UpdatePixelScale()
+    local _, height = strmatch(GetCVar('gxResolution') or '', '(%d+)x(%d+)')
+    height = tonumber(height)
+    if not height or height <= 0 then
+        height = 768
+    end
+    local parentScale = WorldFrame:GetEffectiveScale() or 1
+    self:SetScale((768 / height) / parentScale)
+end
+
+Bridge:RegisterEvent('PLAYER_ENTERING_WORLD')
+Bridge:RegisterEvent('DISPLAY_SIZE_CHANGED')
+Bridge:RegisterEvent('UI_SCALE_CHANGED')
+Bridge:SetScript('OnEvent', Bridge.UpdatePixelScale)
+Bridge:UpdatePixelScale()
 
 -- State tracking
 local flashTimer = 0
@@ -50,7 +69,8 @@ function Bridge:OnUpdate(elapsed)
 
     -- 2. Data Encoding
     -- HP: Red Channel
-    local hp = (UnitHealth('player') / UnitHealthMax('player'))
+    local maxHP = UnitHealthMax('player')
+    local hp = (maxHP > 0) and (UnitHealth('player') / maxHP) or 1
     if hp < 0.01 then hp = 0.01 end
     
     -- State: Green Channel (Bitmask)
@@ -64,8 +84,10 @@ function Bridge:OnUpdate(elapsed)
     
     -- AOE: Blue Channel
     local isAOE = SpellIsTargeting() and 1 or 0
-    
-    Bridge.Data:SetTexture(hp, state / 255, isAOE, 1)
+
+    -- Bits are packed into the top of the channel (state * 32 + 16) so small
+    -- color shifts from gamma, dithering or shaders can't flip them.
+    Bridge.Data:SetTexture(hp, (state * 32 + 16) / 255, isAOE, 1)
 end
 
 ---------------------------------------------------------------
