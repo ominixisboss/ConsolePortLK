@@ -773,7 +773,7 @@ local cvars = { -- value = default
     disableCvarReset        = {false    ; 'Disable console variable reset on exit/logout'};
     disableHints            = {false    ; 'Disable hint display on how certain things work'};
     disableSmartBind        = {false    ; 'Disable action/bag placement helper'};
-    enablePixelBridge       = {false    ; 'Enable Pixel Bridge (experimental)'};
+    enablePixelBridge       = {true     ; 'Enable Pixel Bridge (experimental)'};
     enableNameplates        = {false    ; 'Enable Nameplates (requires reload)'};
     disableSmartMouse       = {false    ; 'Disable smart cursor show/hide'};
     disableStickMouse       = {false    ; 'Disable override bindings for stick buttons'};
