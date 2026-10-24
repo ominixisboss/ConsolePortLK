@@ -60,6 +60,7 @@ Drivers\UIProbe.lua
 Drivers\UIControl.lua
 
 Cursors\Interface.lua
+Cursors\Nudge.lua
 Cursors\UnitFrames.lua
 
 UI\Utils.lua

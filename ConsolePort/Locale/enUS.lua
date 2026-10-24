@@ -138,6 +138,7 @@ TUTORIAL = {
 		ENABLENAMEPLATES	= 'Enable Nameplates (requires reload)',
 		FIXES 				= 'Fixes',
 		DISABLEHOLDREPEAT 	= 'One-to-one interface cursor',
+		ENABLENUDGE 		= 'Nudge cursor: hold CTRL + D-pad to move freely',
 		SKIPCALIBRATION		= 'Disable calibration check on login',
 		-----------------------------------------------------------
 		CONTROLLER 			= 'Change controller',
