@@ -198,7 +198,7 @@ function ConsolePort:CalibrateController(reset)
 		cbF:SetFrameStrata("DIALOG")
 		cbF:SetSize(580, 416)
 
-		if ctrlType ~= "PS4" then
+		do -- every controller can skip optional buttons (guide, grips)
 			cbF.Skip = db.Atlas.GetFutureButton("$parentSkip", cbF)
 			cbF.Skip:SetPoint("BOTTOM", 0, 24)
 			cbF.Skip:SetText(SETUP.SKIPGUIDE)
@@ -569,6 +569,11 @@ function ConsolePort:CalibrateController(reset)
 					if self.Skip and (self.BTN == "CP_X_CENTER" or self.BTN == "CP_T3" or self.BTN == "CP_T4" or self.BTN == "CP_T5" or self.BTN == "CP_T6") then
 						self.Skip.gButton = self.BTN
 						self.Skip:Show()
+						-- Grip buttons don't exist on standard pads: explain what to press instead
+						if self.BTN ~= "CP_X_CENTER" then
+							self.Status:SetText(SETUP.GRIPHINT)
+							self.Status:SetAlpha(1)
+						end
 					elseif self.Skip then
 						self.Skip:Hide()
 					end

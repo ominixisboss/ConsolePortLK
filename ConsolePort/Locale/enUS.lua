@@ -224,6 +224,7 @@ TUTORIAL = {
 		CONTINUECLICK 		= 'Click here to continue',
 		LOADWOWMAPPER 		= 'I\'m using WoWmapper',
 		SKIPGUIDE 			= 'Skip this button',
+		GRIPHINT 			= 'Extra button (grip). No grip on your controller?\nIn AzerothPad HD set the touchpad or L3/R3 to "Separate buttons" and press that, or click Skip.',
 		HEADLINE 			= 'Your controller calibration is incomplete.\nPress the requested button on your controller.\nDo NOT use your keyboard during calibration.',
 		OVERRIDE 			= '|cFFFF6600%s|r is bound to |cFFFF6600%s|r on your keyboard.\n|cFF757575This binding will be restored if you disable ConsolePort.|r\nPress |T%s:20:20:0:0|t again to continue anyway.',
 		OVERRIDE_C 			= '|cFFFF6600%s|r is already calibrated for |cFFFF6600%s|r\nPress |T%s:20:20:0:0|t again to continue anyway.',
