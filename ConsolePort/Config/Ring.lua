@@ -525,6 +525,25 @@ local function BuildLoadoutCategories()
     end
     table.insert(cats, petCat)
 
+    -- Pet actions (attack, follow, stay, abilities, stances)
+    local petCat = { name = LOCALE.PET_ACTIONS or "Pet Actions", items = {} }
+    if HasPetUI() then
+        for i = 1, NUM_PET_ACTION_SLOTS or 10 do
+            local name, _, texture, isToken = GetPetActionInfo(i)
+            if name then
+                table.insert(petCat.items, {
+                    name    = isToken and _G[name] or name,
+                    texture = isToken and _G[texture] or texture,
+                    action  = "pet",
+                    value   = i,
+                })
+            end
+        end
+    end
+    if #petCat.items > 0 then
+        table.insert(cats, petCat)
+    end
+
     -- Rings: a slot that opens another ring (nested ring)
     local ringCat = { name = LOCALE.RINGS or "Rings", items = {} }
     for id, ring in ipairs(ConsolePortUtility or {}) do
@@ -930,6 +949,8 @@ db.PANELS[#db.PANELS + 1] = {
                             local link = GetSpellLink(info.value)
                             if link then GameTooltip:SetHyperlink(link) end
                         end
+                    elseif info.action == 'pet' then
+                        GameTooltip:SetPetAction(tonumber(info.value))
                     elseif info.action == 'ring' then
                         local nested = Core:GetRing(tonumber(info.value))
                         GameTooltip:SetText(nested and nested.Name or 'Ring', 1, 1, 1)
@@ -1012,6 +1033,9 @@ db.PANELS[#db.PANELS + 1] = {
                     elseif info.action == "ring" then
                         local nested = Core:GetRing(tonumber(info.value))
                         tex = nested and nested.Icon
+                    elseif info.action == "pet" then
+                        local _, _, ptex, isToken = GetPetActionInfo(tonumber(info.value) or 0)
+                        tex = isToken and _G[ptex] or ptex
                     end
                     if tex then
                         SetPortraitToTexture(slot.icon, tex)
@@ -1207,6 +1231,8 @@ db.PANELS[#db.PANELS + 1] = {
                             local link = GetSpellLink(info.value)
                             if link then GameTooltip:SetHyperlink(link) end
                         end
+                    elseif info.action == 'pet' then
+                        GameTooltip:SetPetAction(tonumber(info.value))
                     elseif info.action == 'ring' then
                         local nested = Core:GetRing(tonumber(info.value))
                         GameTooltip:SetText(nested and nested.Name or 'Ring', 1, 1, 1)
@@ -1288,6 +1314,9 @@ db.PANELS[#db.PANELS + 1] = {
                     elseif info.action == "ring" then
                         local nested = Core:GetRing(tonumber(info.value))
                         tex = nested and nested.Icon
+                    elseif info.action == "pet" then
+                        local _, _, ptex, isToken = GetPetActionInfo(tonumber(info.value) or 0)
+                        tex = isToken and _G[ptex] or ptex
                     end
                     if tex then
                         SetPortraitToTexture(slot.icon, tex)
@@ -1436,6 +1465,8 @@ db.PANELS[#db.PANELS + 1] = {
                                     local link = GetSpellLink(info.value)
                                     if link then GameTooltip:SetHyperlink(link) end
                                 end
+                            elseif info.action == 'pet' then
+                                GameTooltip:SetPetAction(tonumber(info.value))
                             elseif info.action == 'ring' then
                                 local nested = Core:GetRing(tonumber(info.value))
                                 GameTooltip:SetText(nested and nested.Name or 'Ring', 1, 1, 1)

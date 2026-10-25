@@ -188,6 +188,7 @@ TUTORIAL = {
 	},
 	RING = {
 		RINGS 				= 'Rings',
+		PET_ACTIONS 		= 'Pet Actions',
 		NESTED_HINT 		= 'Release to open this ring, then press again to use a slot.',
 		RING_MAN			= 'Ring Manager',
 		NEW_RING			= 'New Ring',

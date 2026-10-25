@@ -297,6 +297,13 @@ local ENV_RADIAL = {
 						control:RunAttribute('_onuse', true, tostring(target))
 					end
 					return
+				elseif actionType == 'pet' then
+					-- SecureActionButton casts pet actions from the 'action' attribute
+					local petIndex = button:GetAttribute('pet')
+					if petIndex then
+						self:SetAttribute('type', 'pet')
+						self:SetAttribute('action', petIndex)
+					end
 				elseif actionType == 'macro' then
 					local macroID   = button:GetAttribute('macro')
 					local macrotext = button:GetAttribute('macrotext')

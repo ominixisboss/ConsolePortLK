@@ -41,6 +41,11 @@ local TEXTURE_GETS = {
 	spell  = function(id) if id then return select(3, GetSpellInfo(id)), nil end end;
 	companion  = function(id) if id then return select(3, GetSpellInfo(id)), nil end end;
 	macro  = function(id) if id then return select(2, GetMacroInfo(id)), nil end end;
+	pet    = function(id)
+		id = tonumber(id); if not id then return end
+		local _, _, texture, isToken = GetPetActionInfo(id)
+		return isToken and _G[texture] or texture, nil
+	end;
 	ring   = function(id) local r = id and ConsolePortUtility and ConsolePortUtility[tonumber(id)]; return r and r.Icon, nil end;
 	action = function(id) if id then return GetActionTexture(id) end end;
 	custom = function(id)
@@ -384,7 +389,7 @@ function ConsolePortRingButtonMixin:OnAttributeChanged(attribute, detail)
     -- only react to attributes that actually represent button content
     if attribute ~= 'type' and attribute ~= 'item' and attribute ~= 'spell'
        and attribute ~= 'macro' and attribute ~= 'action' and attribute ~= 'custombinding'
-       and attribute ~= 'ring' then
+       and attribute ~= 'ring' and attribute ~= 'pet' then
         return
     end
 
@@ -436,6 +441,8 @@ function ConsolePortRingButtonMixin:OnTooltipUpdate(elapsed)
             elseif info.action == 'macro' then
                 local macroName = GetMacroInfo(info.value)
                 if macroName then self.Tooltip:SetText(macroName, 1, 1, 1) end
+            elseif info.action == 'pet' then
+                self.Tooltip:SetPetAction(tonumber(info.value))
             elseif info.action == 'ring' then
                 local nested = ConsolePortUtility[tonumber(info.value)]
                 self.Tooltip:SetText(nested and nested.Name or "Ring", 1, 1, 1)
@@ -531,6 +538,13 @@ function ConsolePortRingButtonMixin:UpdateState()
 			self:SetUsable(IsUsableAction(actionID))
 			self:SetCooldown(GetActionCooldown(actionID))
 		end 
+	elseif action == 'pet' then
+		local index = tonumber(self:GetAttribute('pet'))
+		if index then
+			self:UpdateTexture(action, index)
+			self:SetUsable(GetPetActionSlotUsable(index) and true or false)
+			self:SetCooldown(GetPetActionCooldown(index))
+		end
 	elseif action == 'custom' then
         self:SetUsable(true)
         self:SetCooldown(0, 0)
@@ -1120,6 +1134,9 @@ function Utility:OnRefresh(size)
 		'SPELL_UPDATE_COOLDOWN',
 		'SPELL_UPDATE_CHARGES',
 		'SPELL_UPDATE_USABLE',
+		'PET_BAR_UPDATE',
+		'PET_BAR_UPDATE_COOLDOWN',
+		'UNIT_PET',
 	}) do pcall(self.RegisterEvent, self, event) end
 end
 
