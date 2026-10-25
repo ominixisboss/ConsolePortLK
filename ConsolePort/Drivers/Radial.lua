@@ -273,6 +273,14 @@ local ENV_RADIAL = {
 	---------------------------------------------------------------
 	['_preclick'] = [[
 		self:ClearBinding('BUTTON1')
+
+		-- Nested ring is open: the next press keeps it open, the release uses the slot
+		if self:GetAttribute('nested') then
+			self:SetAttribute('type', nil)
+			if down then return end
+			self:SetAttribute('nested', nil)
+		end
+
 		control:RunAttribute('_onuse', down, button)
 		self:SetAttribute('type', nil)  
 		 
@@ -280,7 +288,16 @@ local ENV_RADIAL = {
 			local button = self:GetFrameRef(control:RunAttribute('_getindex'))
 			if button then
 				local actionType = button:GetAttribute('type')
-				if actionType == 'macro' then
+				if actionType == 'ring' then
+					-- Open the nested ring and keep it on screen until the next press
+					local target = button:GetAttribute('ring')
+					control:RunAttribute('_setindex', nil)
+					if target then
+						self:SetAttribute('nested', true)
+						control:RunAttribute('_onuse', true, tostring(target))
+					end
+					return
+				elseif actionType == 'macro' then
 					local macroID   = button:GetAttribute('macro')
 					local macrotext = button:GetAttribute('macrotext')
 					if macroID or macrotext then

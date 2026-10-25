@@ -41,6 +41,7 @@ local TEXTURE_GETS = {
 	spell  = function(id) if id then return select(3, GetSpellInfo(id)), nil end end;
 	companion  = function(id) if id then return select(3, GetSpellInfo(id)), nil end end;
 	macro  = function(id) if id then return select(2, GetMacroInfo(id)), nil end end;
+	ring   = function(id) local r = id and ConsolePortUtility and ConsolePortUtility[tonumber(id)]; return r and r.Icon, nil end;
 	action = function(id) if id then return GetActionTexture(id) end end;
 	custom = function(id)
         if id and ConsolePort.GetCustomBindingsForRings then
@@ -382,7 +383,8 @@ function ConsolePortRingButtonMixin:OnAttributeChanged(attribute, detail)
 
     -- only react to attributes that actually represent button content
     if attribute ~= 'type' and attribute ~= 'item' and attribute ~= 'spell'
-       and attribute ~= 'macro' and attribute ~= 'action' and attribute ~= 'custombinding' then
+       and attribute ~= 'macro' and attribute ~= 'action' and attribute ~= 'custombinding'
+       and attribute ~= 'ring' then
         return
     end
 
@@ -434,6 +436,11 @@ function ConsolePortRingButtonMixin:OnTooltipUpdate(elapsed)
             elseif info.action == 'macro' then
                 local macroName = GetMacroInfo(info.value)
                 if macroName then self.Tooltip:SetText(macroName, 1, 1, 1) end
+            elseif info.action == 'ring' then
+                local nested = ConsolePortUtility[tonumber(info.value)]
+                self.Tooltip:SetText(nested and nested.Name or "Ring", 1, 1, 1)
+                self.Tooltip:AddLine(db.TUTORIAL.RING and db.TUTORIAL.RING.NESTED_HINT or "Release to open this ring.", 0.8, 0.8, 0.8, true)
+                self.Tooltip:Show()
             elseif info.action == 'custom' then
                 local name = "Custom Binding"
                 if ConsolePort.GetCustomBindingsForRings then

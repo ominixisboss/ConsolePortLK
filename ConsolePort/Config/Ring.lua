@@ -525,6 +525,20 @@ local function BuildLoadoutCategories()
     end
     table.insert(cats, petCat)
 
+    -- Rings: a slot that opens another ring (nested ring)
+    local ringCat = { name = LOCALE.RINGS or "Rings", items = {} }
+    for id, ring in ipairs(ConsolePortUtility or {}) do
+        table.insert(ringCat.items, {
+            name    = ring.Name or ("Ring " .. id),
+            texture = ring.Icon or "Interface\\Icons\\INV_Misc_QuestionMark",
+            action  = "ring",
+            value   = id,
+        })
+    end
+    if #ringCat.items > 1 then
+        table.insert(cats, ringCat)
+    end
+
     local customBindingsList = ConsolePort:GetCustomBindingsForRings()  
     if customBindingsList then 
         local cpCat = { name = "ConsolePort", items = {} }
@@ -916,6 +930,10 @@ db.PANELS[#db.PANELS + 1] = {
                             local link = GetSpellLink(info.value)
                             if link then GameTooltip:SetHyperlink(link) end
                         end
+                    elseif info.action == 'ring' then
+                        local nested = Core:GetRing(tonumber(info.value))
+                        GameTooltip:SetText(nested and nested.Name or 'Ring', 1, 1, 1)
+                        GameTooltip:Show()
                     elseif info.action == 'macro' then
                         local name, _, body = GetMacroInfo(info.value)
                         -- Optional: Show macro name/contents
@@ -991,6 +1009,9 @@ db.PANELS[#db.PANELS + 1] = {
                             or select(3, GetSpellInfo(info.value))
                     elseif info.action == "macro" then
                         tex = select(2, GetMacroInfo(info.value))
+                    elseif info.action == "ring" then
+                        local nested = Core:GetRing(tonumber(info.value))
+                        tex = nested and nested.Icon
                     end
                     if tex then
                         SetPortraitToTexture(slot.icon, tex)
@@ -1186,6 +1207,10 @@ db.PANELS[#db.PANELS + 1] = {
                             local link = GetSpellLink(info.value)
                             if link then GameTooltip:SetHyperlink(link) end
                         end
+                    elseif info.action == 'ring' then
+                        local nested = Core:GetRing(tonumber(info.value))
+                        GameTooltip:SetText(nested and nested.Name or 'Ring', 1, 1, 1)
+                        GameTooltip:Show()
                     elseif info.action == 'macro' then
                         local name, _, body = GetMacroInfo(info.value)
                         GameTooltip:ClearLines() 
@@ -1260,6 +1285,9 @@ db.PANELS[#db.PANELS + 1] = {
                             or select(3, GetSpellInfo(info.value))
                     elseif info.action == "macro" then
                         tex = select(2, GetMacroInfo(info.value))
+                    elseif info.action == "ring" then
+                        local nested = Core:GetRing(tonumber(info.value))
+                        tex = nested and nested.Icon
                     end
                     if tex then
                         SetPortraitToTexture(slot.icon, tex)
@@ -1408,6 +1436,10 @@ db.PANELS[#db.PANELS + 1] = {
                                     local link = GetSpellLink(info.value)
                                     if link then GameTooltip:SetHyperlink(link) end
                                 end
+                            elseif info.action == 'ring' then
+                                local nested = Core:GetRing(tonumber(info.value))
+                                GameTooltip:SetText(nested and nested.Name or 'Ring', 1, 1, 1)
+                                GameTooltip:Show()
                             elseif info.action == 'macro' then
                                 local name, _, body = GetMacroInfo(info.value)
                                 GameTooltip:ClearLines() 
