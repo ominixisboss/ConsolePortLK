@@ -141,6 +141,7 @@ TUTORIAL = {
 		ENABLENUDGE 		= 'Nudge cursor: hold CTRL + D-pad to move freely',
 		POINTERANIMATION 	= 'Rotating cursor arrow',
 		CROSSHAIR 			= 'Show crosshair while mouselooking',
+		DISABLESPELLMENU 	= 'Pick up spells directly (no spell menu)',
 		SKIPCALIBRATION		= 'Disable calibration check on login',
 		-----------------------------------------------------------
 		CONTROLLER 			= 'Change controller',
@@ -191,6 +192,7 @@ TUTORIAL = {
 		RINGS 				= 'Rings',
 		PET_ACTIONS 		= 'Pet Actions',
 		UNIT_TARGETS 		= 'Party / Targets',
+		PICKUP_SPELL 		= 'Pick up (place on action bar)',
 		NESTED_HINT 		= 'Release to open this ring, then press again to use a slot.',
 		RING_MAN			= 'Ring Manager',
 		NEW_RING			= 'New Ring',

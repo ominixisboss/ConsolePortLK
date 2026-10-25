@@ -536,7 +536,11 @@ local function SpecialAction(self)
 				--		PickupSpell(spellID)
 				--	end
 					if(sID) then
-						PickupSpell(sID, book.bookType)
+						if db('UIdisableSpellMenu') then
+							PickupSpell(sID, book.bookType)
+						else
+							ConsolePort:ShowSpellMenu(sID, book.bookType, node)
+						end
 					end
 				end
 			end

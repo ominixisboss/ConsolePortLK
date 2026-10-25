@@ -829,6 +829,7 @@ local cvars = { -- value = default
     UIenableNudge           = {false    ; 'Hold CTRL + D-pad to move the interface cursor freely'};
     UIpointerAnimation      = {true     ; 'Cursor arrow turns toward the direction it moves'};
     crosshairEnable         = {false    ; 'Show a crosshair at screen centre while mouselooking'};
+    UIdisableSpellMenu      = {false    ; 'Pick up spells directly instead of opening the spell menu'};
     UIdisableTooltipFix     = {false    ; 'Disable mouse cursor anchor workaround'};
     UIdropDownFix           = {true     ; 'Fix interface cursor on dropdowns'};
     --------------------------------------------------------------------------------------------------------

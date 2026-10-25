@@ -70,6 +70,7 @@ UI\Mixins.lua
 UI\Tooltip.lua
 
 Frames\Item.lua
+Frames\SpellMenu.lua
 Frames\Unit.lua
 Frames\Hooks.lua
 Frames\Hints.lua
