@@ -756,9 +756,9 @@ db.PANELS[#db.PANELS + 1] = {name = 'Controls', header = SETTINGS, mixin = Windo
 	do local GeneralModule = Controls.GeneralModule
 
 		local mouseCvarOffset = #Controls.Events
-		local padding = 28
-		local ROWS_PER_COLUMN = 18
-		local COLUMN_WIDTH = 330
+		-- The visible part of this panel is ~388 wide (the Interact Button
+		-- panels cover the rest), so keep a single, slightly tighter column.
+		local padding = 24
 		Controls.General = {}
 		GeneralModule.Entries = {}
 		for i, setting in pairs(GetAddonSettings()) do
@@ -785,7 +785,7 @@ db.PANELS[#db.PANELS + 1] = {name = 'Controls', header = SETTINGS, mixin = Windo
 			end
 		end
 
-		-- Lay out the settings in two columns, showing only those matching the search
+		-- Lay out the settings in one column, showing only those matching the search
 		function GeneralModule:Layout(query)
 			query = query and query:lower():gsub('^%s+', ''):gsub('%s+$', '') or ''
 			local row = 0
@@ -795,12 +795,11 @@ db.PANELS[#db.PANELS + 1] = {name = 'Controls', header = SETTINGS, mixin = Windo
 				widget:ClearAllPoints()
 				if shown then
 					row = row + 1
-					local column = (row > ROWS_PER_COLUMN) and 1 or 0
-					local y = -padding * ((row - 1) % ROWS_PER_COLUMN + 1)
+					local y = -padding * row
 					if entry.isHeader then
-						widget:SetPoint('TOPLEFT', 24 + column * COLUMN_WIDTH, y - 24)
+						widget:SetPoint('TOPLEFT', 24, y - 24)
 					else
-						widget:SetPoint('TOPLEFT', 24 + column * COLUMN_WIDTH, y - 12)
+						widget:SetPoint('TOPLEFT', 24, y - 12)
 					end
 					widget:Show()
 				else
@@ -811,9 +810,9 @@ db.PANELS[#db.PANELS + 1] = {name = 'Controls', header = SETTINGS, mixin = Windo
 
 		-- Search box next to the header
 		local search = CreateFrame('EditBox', '$parentSearch', GeneralModule, 'InputBoxTemplate')
-		search:SetSize(180, 20)
+		search:SetSize(140, 20)
 		search:SetAutoFocus(false)
-		search:SetPoint('TOPRIGHT', -40, -22)
+		search:SetPoint('TOPLEFT', 230, -22)
 		search.Hint = search:CreateFontString(nil, 'OVERLAY', 'GameFontDisableSmall')
 		search.Hint:SetPoint('LEFT', 4, 0)
 		search.Hint:SetText(SEARCH or 'Search')
