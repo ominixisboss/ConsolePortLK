@@ -107,8 +107,9 @@ function Cursor:Move(...)
 
 	if not Pointer.enabled or not oldX then return end
 	local pointer = self.Pointer
-	local newX, newY = pointer and pointer:GetCenter()
-	if newX then
+	if not pointer then return end
+	local newX, newY = pointer:GetCenter()
+	if newX and newY then
 		local newScale = pointer:GetEffectiveScale()
 		Pointer:Travel(oldX * oldScale, oldY * oldScale, newX * newScale, newY * newScale)
 	end
