@@ -140,6 +140,7 @@ TUTORIAL = {
 		DISABLEHOLDREPEAT 	= 'One-to-one interface cursor',
 		ENABLENUDGE 		= 'Nudge cursor: hold CTRL + D-pad to move freely',
 		POINTERANIMATION 	= 'Rotating cursor arrow',
+		CROSSHAIR 			= 'Show crosshair while mouselooking',
 		SKIPCALIBRATION		= 'Disable calibration check on login',
 		-----------------------------------------------------------
 		CONTROLLER 			= 'Change controller',

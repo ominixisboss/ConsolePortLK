@@ -81,5 +81,6 @@ Frames\Totem.lua
 Frames\Helper.lua
 Frames\Nameplate.lua
 Frames\PixelBridge.lua
+Frames\Crosshair.lua
 
 Plugins\Plugins.xml

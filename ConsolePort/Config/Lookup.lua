@@ -828,6 +828,7 @@ local cvars = { -- value = default
     UIdisableHoldRepeat     = {false    ; 'Disable D-pad input repeater'};
     UIenableNudge           = {false    ; 'Hold CTRL + D-pad to move the interface cursor freely'};
     UIpointerAnimation      = {true     ; 'Cursor arrow turns toward the direction it moves'};
+    crosshairEnable         = {false    ; 'Show a crosshair at screen centre while mouselooking'};
     UIdisableTooltipFix     = {false    ; 'Disable mouse cursor anchor workaround'};
     UIdropDownFix           = {true     ; 'Fix interface cursor on dropdowns'};
     --------------------------------------------------------------------------------------------------------
