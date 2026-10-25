@@ -282,7 +282,8 @@ local ENV_RADIAL = {
 		end
 
 		control:RunAttribute('_onuse', down, button)
-		self:SetAttribute('type', nil)  
+		self:SetAttribute('type', nil)
+		self:SetAttribute('unit', nil) -- don't let a previous unit slot redirect the next cast
 		 
 		if not down then
 			local button = self:GetFrameRef(control:RunAttribute('_getindex'))
@@ -297,6 +298,13 @@ local ENV_RADIAL = {
 						control:RunAttribute('_onuse', true, tostring(target))
 					end
 					return
+				elseif actionType == 'unit' then
+					-- Target the unit in this slot
+					local unit = button:GetAttribute('unit')
+					if unit then
+						self:SetAttribute('type', 'target')
+						self:SetAttribute('unit', unit)
+					end
 				elseif actionType == 'pet' then
 					-- SecureActionButton casts pet actions from the 'action' attribute
 					local petIndex = button:GetAttribute('pet')

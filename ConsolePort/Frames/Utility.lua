@@ -41,6 +41,7 @@ local TEXTURE_GETS = {
 	spell  = function(id) if id then return select(3, GetSpellInfo(id)), nil end end;
 	companion  = function(id) if id then return select(3, GetSpellInfo(id)), nil end end;
 	macro  = function(id) if id then return select(2, GetMacroInfo(id)), nil end end;
+	unit   = function(id) return ConsolePort:GetRingUnitIcon(id), nil end;
 	pet    = function(id)
 		id = tonumber(id); if not id then return end
 		local _, _, texture, isToken = GetPetActionInfo(id)
@@ -151,6 +152,33 @@ end
 -- called from secure scope (e.g. extra action button 1 appears)
 function Utility:AnimateNew(button) Animation:ShowNewAction(_G[button], true) end
 
+
+---------------------------------------------------------------
+-- Unit target slots (target ring)
+---------------------------------------------------------------
+local RING_UNIT_ICONS = {
+	player = [[Interface\Icons\Spell_Holy_PowerWordShield]],
+	pet    = [[Interface\Icons\Ability_Hunter_BeastCall]],
+	focus  = [[Interface\Icons\Ability_Hunter_SniperShot]],
+	target = [[Interface\Icons\Ability_Hunter_MarkedForDeath]],
+}
+local RING_UNIT_PARTY = [[Interface\Icons\INV_Misc_GroupNeedMore]]
+
+function ConsolePort:GetRingUnits()
+	return {'player', 'party1', 'party2', 'party3', 'party4', 'pet', 'focus'}
+end
+
+function ConsolePort:GetRingUnitIcon(unit)
+	if not unit then return end
+	return RING_UNIT_ICONS[unit] or (unit:match('^party') and RING_UNIT_PARTY) or RING_UNIT_PARTY
+end
+
+function ConsolePort:GetRingUnitLabel(unit)
+	local name = unit and UnitName(unit)
+	local label = (unit == 'player' and 'You') or (unit and unit:gsub('^party', 'Party ')) or '?'
+	label = label:gsub('^pet$', 'Pet'):gsub('^focus$', 'Focus')
+	return name and ('%s (%s)'):format(name, label) or label
+end
 
 ---------------------------------------------------------------
 -- Add action to free actionbutton
@@ -389,7 +417,7 @@ function ConsolePortRingButtonMixin:OnAttributeChanged(attribute, detail)
     -- only react to attributes that actually represent button content
     if attribute ~= 'type' and attribute ~= 'item' and attribute ~= 'spell'
        and attribute ~= 'macro' and attribute ~= 'action' and attribute ~= 'custombinding'
-       and attribute ~= 'ring' and attribute ~= 'pet' then
+       and attribute ~= 'ring' and attribute ~= 'pet' and attribute ~= 'unit' then
         return
     end
 
@@ -443,6 +471,13 @@ function ConsolePortRingButtonMixin:OnTooltipUpdate(elapsed)
                 if macroName then self.Tooltip:SetText(macroName, 1, 1, 1) end
             elseif info.action == 'pet' then
                 self.Tooltip:SetPetAction(tonumber(info.value))
+            elseif info.action == 'unit' then
+                if UnitExists(info.value) then
+                    self.Tooltip:SetUnit(info.value)
+                else
+                    self.Tooltip:SetText(ConsolePort:GetRingUnitLabel(info.value), 0.6, 0.6, 0.6)
+                    self.Tooltip:Show()
+                end
             elseif info.action == 'ring' then
                 local nested = ConsolePortUtility[tonumber(info.value)]
                 self.Tooltip:SetText(nested and nested.Name or "Ring", 1, 1, 1)
@@ -538,6 +573,10 @@ function ConsolePortRingButtonMixin:UpdateState()
 			self:SetUsable(IsUsableAction(actionID))
 			self:SetCooldown(GetActionCooldown(actionID))
 		end 
+	elseif action == 'unit' then
+		local unit = self:GetAttribute('unit')
+		self:SetUsable(unit and UnitExists(unit) and not UnitIsDeadOrGhost(unit))
+		self:SetCooldown(0, 0)
 	elseif action == 'pet' then
 		local index = tonumber(self:GetAttribute('pet'))
 		if index then
@@ -1137,6 +1176,8 @@ function Utility:OnRefresh(size)
 		'PET_BAR_UPDATE',
 		'PET_BAR_UPDATE_COOLDOWN',
 		'UNIT_PET',
+		'PARTY_MEMBERS_CHANGED',
+		'PLAYER_FOCUS_CHANGED',
 	}) do pcall(self.RegisterEvent, self, event) end
 end
 

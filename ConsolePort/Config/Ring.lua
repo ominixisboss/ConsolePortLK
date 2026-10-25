@@ -525,6 +525,18 @@ local function BuildLoadoutCategories()
     end
     table.insert(cats, petCat)
 
+    -- Unit targets (target ring): you, party members, pet, focus
+    local unitCat = { name = LOCALE.UNIT_TARGETS or "Party / Targets", items = {} }
+    for _, unit in ipairs(ConsolePort:GetRingUnits()) do
+        table.insert(unitCat.items, {
+            name    = ConsolePort:GetRingUnitLabel(unit),
+            texture = ConsolePort:GetRingUnitIcon(unit),
+            action  = "unit",
+            value   = unit,
+        })
+    end
+    table.insert(cats, unitCat)
+
     -- Pet actions (attack, follow, stay, abilities, stances)
     local petCat = { name = LOCALE.PET_ACTIONS or "Pet Actions", items = {} }
     if HasPetUI() then
@@ -949,6 +961,9 @@ db.PANELS[#db.PANELS + 1] = {
                             local link = GetSpellLink(info.value)
                             if link then GameTooltip:SetHyperlink(link) end
                         end
+                    elseif info.action == 'unit' then
+                        GameTooltip:SetText(ConsolePort:GetRingUnitLabel(info.value), 1, 1, 1)
+                        GameTooltip:Show()
                     elseif info.action == 'pet' then
                         GameTooltip:SetPetAction(tonumber(info.value))
                     elseif info.action == 'ring' then
@@ -1036,6 +1051,8 @@ db.PANELS[#db.PANELS + 1] = {
                     elseif info.action == "pet" then
                         local _, _, ptex, isToken = GetPetActionInfo(tonumber(info.value) or 0)
                         tex = isToken and _G[ptex] or ptex
+                    elseif info.action == "unit" then
+                        tex = ConsolePort:GetRingUnitIcon(info.value)
                     end
                     if tex then
                         SetPortraitToTexture(slot.icon, tex)
@@ -1231,6 +1248,9 @@ db.PANELS[#db.PANELS + 1] = {
                             local link = GetSpellLink(info.value)
                             if link then GameTooltip:SetHyperlink(link) end
                         end
+                    elseif info.action == 'unit' then
+                        GameTooltip:SetText(ConsolePort:GetRingUnitLabel(info.value), 1, 1, 1)
+                        GameTooltip:Show()
                     elseif info.action == 'pet' then
                         GameTooltip:SetPetAction(tonumber(info.value))
                     elseif info.action == 'ring' then
@@ -1317,6 +1337,8 @@ db.PANELS[#db.PANELS + 1] = {
                     elseif info.action == "pet" then
                         local _, _, ptex, isToken = GetPetActionInfo(tonumber(info.value) or 0)
                         tex = isToken and _G[ptex] or ptex
+                    elseif info.action == "unit" then
+                        tex = ConsolePort:GetRingUnitIcon(info.value)
                     end
                     if tex then
                         SetPortraitToTexture(slot.icon, tex)
@@ -1465,6 +1487,9 @@ db.PANELS[#db.PANELS + 1] = {
                                     local link = GetSpellLink(info.value)
                                     if link then GameTooltip:SetHyperlink(link) end
                                 end
+                            elseif info.action == 'unit' then
+                                GameTooltip:SetText(ConsolePort:GetRingUnitLabel(info.value), 1, 1, 1)
+                                GameTooltip:Show()
                             elseif info.action == 'pet' then
                                 GameTooltip:SetPetAction(tonumber(info.value))
                             elseif info.action == 'ring' then
