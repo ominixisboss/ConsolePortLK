@@ -827,6 +827,7 @@ local cvars = { -- value = default
     UIholdRepeatDelay       = {.150     ; 'Delay until a D-pad input is repeated (interface)'};
     UIdisableHoldRepeat     = {false    ; 'Disable D-pad input repeater'};
     UIenableNudge           = {false    ; 'Hold CTRL + D-pad to move the interface cursor freely'};
+    UIpointerAnimation      = {true     ; 'Cursor arrow turns toward the direction it moves'};
     UIdisableTooltipFix     = {false    ; 'Disable mouse cursor anchor workaround'};
     UIdropDownFix           = {true     ; 'Fix interface cursor on dropdowns'};
     --------------------------------------------------------------------------------------------------------

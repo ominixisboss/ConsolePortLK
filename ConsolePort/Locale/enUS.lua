@@ -139,6 +139,7 @@ TUTORIAL = {
 		FIXES 				= 'Fixes',
 		DISABLEHOLDREPEAT 	= 'One-to-one interface cursor',
 		ENABLENUDGE 		= 'Nudge cursor: hold CTRL + D-pad to move freely',
+		POINTERANIMATION 	= 'Rotating cursor arrow',
 		SKIPCALIBRATION		= 'Disable calibration check on login',
 		-----------------------------------------------------------
 		CONTROLLER 			= 'Change controller',
