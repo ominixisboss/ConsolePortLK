@@ -42,6 +42,9 @@
 			print("WoWmapper attempted to update your settings prematurely.\nUse /reload to apply new settings.")
 		end
 	</Binding>
+	<Binding name="CP_TOGGLECURSOR" hidden="true">
+		ConsolePort:ToggleInterfaceCursor()
+	</Binding>
 	<Binding name="CP_TOGGLEMOUSE" hidden="true">
 		ConsolePortCamera:Toggle()
 	</Binding>

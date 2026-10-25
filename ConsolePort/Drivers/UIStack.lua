@@ -231,10 +231,33 @@ function Core:ToggleUICore()
 	end
 end
 
+-- On-demand mode: the cursor only appears after the toggle binding
+-- (CP_TOGGLECURSOR) is pressed, and stays until all windows close.
+local cursorRequested
+
+function Core:ToggleInterfaceCursor()
+	if InCombatLockdown() then return end
+	cursorRequested = not (cursorRequested and hasUIFocus)
+	if not cursorRequested then
+		hasUIFocus = self:UIOverrideButtons(false)
+	else
+		self:UpdateFrames()
+	end
+end
+
 function Core:UpdateFrames(updateCursor)
 	if not isLocked then
 		self:UpdateFrameTracker()
-		if next(visible) then
+		-- With unlimited navigation, a requested cursor works without any window open
+		local freeCursor = cursorRequested and db('UIunlimitedNavigation')
+		if not next(visible) and not freeCursor then
+			cursorRequested = nil
+		end
+		if db('UIonDemand') and not cursorRequested then
+			hasUIFocus = self:UIOverrideButtons(false)
+			return
+		end
+		if next(visible) or freeCursor then
 			hasUIFocus = hasUIFocus or self:UIOverrideButtons(self:UIControl())
 			return
 		end
@@ -248,6 +271,10 @@ function Core:IterateVisibleCursorFrames()
 end
 
 function Core:GetVisibleCursorFrames()
+	-- Unlimited navigation: scan the whole interface, not just tracked windows
+	if db('UIunlimitedNavigation') then
+		return UIParent
+	end
 	return unravel(visible)
 end
 

@@ -565,6 +565,7 @@ function ConsolePort:GetCustomBindings()
         {name = L.CP_PETRING, binding = 'CLICK ConsolePortBarPet:MiddleButton'},
         {name = L.CP_TOGGLEADDON, binding = 'CLICK ConsolePortLoader:LeftButton'}, 
         {name = L.CP_TOTEMFRAME, binding = 'CLICK ConsolePortTotemToggle:LeftButton'},
+        {name = L.CP_TOGGLECURSOR, binding = 'CP_TOGGLECURSOR'},
         -- Pager
         {name = L.CP_PAGER},
         {name = L.CP_PAGE2, binding = 'CLICK ConsolePortPager:2'},
@@ -830,6 +831,8 @@ local cvars = { -- value = default
     UIpointerAnimation      = {true     ; 'Cursor arrow turns toward the direction it moves'};
     crosshairEnable         = {false    ; 'Show a crosshair at screen centre while mouselooking'};
     UIdisableSpellMenu      = {false    ; 'Pick up spells directly instead of opening the spell menu'};
+    UIonDemand              = {false    ; 'Interface cursor only appears when toggled with its binding'};
+    UIunlimitedNavigation   = {false    ; 'Interface cursor can reach the whole interface'};
     UIdisableTooltipFix     = {false    ; 'Disable mouse cursor anchor workaround'};
     UIdropDownFix           = {true     ; 'Fix interface cursor on dropdowns'};
     --------------------------------------------------------------------------------------------------------

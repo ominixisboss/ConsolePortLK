@@ -142,6 +142,8 @@ TUTORIAL = {
 		POINTERANIMATION 	= 'Rotating cursor arrow',
 		CROSSHAIR 			= 'Show crosshair while mouselooking',
 		DISABLESPELLMENU 	= 'Pick up spells directly (no spell menu)',
+		UIONDEMAND 			= 'Interface cursor on demand (use its toggle binding)',
+		UIUNLIMITED 		= 'Interface cursor can reach the whole screen',
 		SKIPCALIBRATION		= 'Disable calibration check on login',
 		-----------------------------------------------------------
 		CONTROLLER 			= 'Change controller',
@@ -343,6 +345,7 @@ CUSTOMBINDS = {
 	CP_EM_PLATES		=	'Target Nameplates (Hold)',
 	CP_EM_NEAREST		= 	'Target Nearest or Nameplates (Hold)',
 	CP_TOGGLEMOUSE		= 	'Toggle Mouse Look',
+	CP_TOGGLECURSOR		= 	'Toggle Interface Cursor',
 	CP_FOCUSCAST		= 	FOCUS_CAST_KEY_TEXT .. ' (Hold)',
 	CP_PAGE2 			= 	BINDING_NAME_ACTIONPAGE2 .. ' (Hold)',
 	CP_PAGE3 			= 	BINDING_NAME_ACTIONPAGE3 .. ' (Hold)',
