@@ -240,7 +240,7 @@ function WrapperMixin:SetSize(new)
             
             button.isMainButton = true 
             button:Show()
-            button:SetAlpha(1)
+            button:SetAlpha(layoutData.showOn and 0 or 1)
 
             -- Re-anchor hotkeys to top
             local hotkey = button.hotkey or button.hotkey1
@@ -323,7 +323,7 @@ function WrapperMixin:UpdateOrientation(orientation)
         -- TRIPLE MODE: promoted buttons are handled by OnLoad, skip mask
         if isTriple and preset.layout and preset.layout[button.id] then
             button.isMainButton = true
-            button:SetAlpha(1)
+            button:SetAlpha(preset.layout[button.id].showOn and 0 or 1)
             button:Show()
             return
         elseif not button.isMainButton then

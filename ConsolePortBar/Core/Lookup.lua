@@ -238,6 +238,86 @@ function ab:GetPresets()
 			},
 		}, 
 
+		-- Ported from modern ConsolePort's "Crossbar: Triggers"
+		-- (seblindfors/ConsolePort, Artistic License 2.0), adapted for 3.3.5a:
+		-- hold Shift for the left crossbar, Ctrl for the right one, and both
+		-- for the center crossbar, which replaces the other two while held.
+		["Crossbar: Triggers"] = {
+			scale = 1,
+			width = 1100,
+			watchbars = true,
+			showline = false,
+			lock = true,
+			useSquareButtons = true,
+			isTriple = true,
+			bothModsState = 'M1M2',
+			dividers = {
+				['DIVIDER_LEFT'] = {
+					point = {'BOTTOM', -3, 75},
+					breadth   = 100,
+					depth     = 300,
+					rotation  = 90,
+					thickness = 4,
+					intensity = 12,
+					opacity = {
+						focus  = 'M1',
+						idle   = true,
+						hidden = 'M1M2',
+					},
+				},
+				['DIVIDER_RIGHT'] = {
+					point = {'BOTTOM', 3, 75},
+					breadth   = 100,
+					depth     = 300,
+					rotation  = 270,
+					thickness = 4,
+					intensity = 12,
+					opacity = {
+						focus  = 'M2',
+						idle   = true,
+						hidden = 'M1M2',
+					},
+				},
+			},
+			layout = {
+				-- LEFT CROSSBAR (SHIFT): hidden while both modifiers are held
+				CP_L_UP_SHIFT       = {point={'BOTTOM', -235, 100}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_L_DOWN_SHIFT     = {point={'BOTTOM', -235, 50}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_L_LEFT_SHIFT     = {point={'BOTTOM', -285, 75}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_L_RIGHT_SHIFT    = {point={'BOTTOM', -185, 75}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_R_UP_SHIFT       = {point={'BOTTOM', -85, 100}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_R_DOWN_SHIFT     = {point={'BOTTOM', -85, 50}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_R_LEFT_SHIFT     = {point={'BOTTOM', -135, 75}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_R_RIGHT_SHIFT    = {point={'BOTTOM', -35, 75}, size=45, hideOn='CTRL-SHIFT-'},
+
+				-- RIGHT CROSSBAR (CTRL): hidden while both modifiers are held
+				CP_L_UP_CTRL        = {point={'BOTTOM', 85, 100}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_L_DOWN_CTRL      = {point={'BOTTOM', 85, 50}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_L_LEFT_CTRL      = {point={'BOTTOM', 35, 75}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_L_RIGHT_CTRL     = {point={'BOTTOM', 135, 75}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_R_UP_CTRL        = {point={'BOTTOM', 235, 100}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_R_DOWN_CTRL      = {point={'BOTTOM', 235, 50}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_R_LEFT_CTRL      = {point={'BOTTOM', 185, 75}, size=45, hideOn='CTRL-SHIFT-'},
+				CP_R_RIGHT_CTRL     = {point={'BOTTOM', 285, 75}, size=45, hideOn='CTRL-SHIFT-'},
+
+				-- CENTER CROSSBAR (CTRL+SHIFT): only shown while both are held
+				CP_L_UP_CTRL_SHIFT  = {point={'BOTTOM', -75, 100}, size=45, showOn='CTRL-SHIFT-'},
+				CP_L_DOWN_CTRL_SHIFT= {point={'BOTTOM', -75, 50}, size=45, showOn='CTRL-SHIFT-'},
+				CP_L_LEFT_CTRL_SHIFT= {point={'BOTTOM', -125, 75}, size=45, showOn='CTRL-SHIFT-'},
+				CP_L_RIGHT_CTRL_SHIFT= {point={'BOTTOM', -25, 75}, size=45, showOn='CTRL-SHIFT-'},
+				CP_R_UP_CTRL_SHIFT  = {point={'BOTTOM', 75, 100}, size=45, showOn='CTRL-SHIFT-'},
+				CP_R_DOWN_CTRL_SHIFT= {point={'BOTTOM', 75, 50}, size=45, showOn='CTRL-SHIFT-'},
+				CP_R_LEFT_CTRL_SHIFT= {point={'BOTTOM', 25, 75}, size=45, showOn='CTRL-SHIFT-'},
+				CP_R_RIGHT_CTRL_SHIFT= {point={'BOTTOM', 125, 75}, size=45, showOn='CTRL-SHIFT-'},
+
+				-- Shoulder buttons above the crossbars
+				CP_T3 = {point = {'BOTTOM', -75, 215}, size=45, scale=0.8, static=true},
+				CP_T4 = {point = {'BOTTOM', -25, 215}, size=45, scale=0.8, static=true},
+				CP_T1 = {point = {'BOTTOM', 25, 215}, size=45, scale=0.8, static=true},
+				CP_T2 = {point = {'BOTTOM', 75, 215}, size=45, scale=0.8, static=true},
+			},
+		},
+
 		["Crossbar: Triple"] = {
 			scale = 1,
 			width = 1100,

@@ -49,6 +49,14 @@ Bar:Execute([[
             -- Inactive cluster: its natural base size
             self:SetScale(base)
         end
+
+        -- Optional visibility per modifier state (Crossbar: Triggers)
+        local showOn, hideOn = self:GetAttribute("showOn"), self:GetAttribute("hideOn")
+        if showOn then
+            self:SetAlpha(state == showOn and 1 or 0)
+        elseif hideOn then
+            self:SetAlpha(state == hideOn and 0 or 1)
+        end
     ]=]
 ]])
 
@@ -391,6 +399,7 @@ function Bar:OnLoad(cfg, benign)
     end
 
 	local buttonIndex = 0
+	local listed = {}
     for id, layoutData in pairs(layout) do
         local baseID = id:match("^(CP_[^_]+_[^_]+)") or id
         
@@ -406,11 +415,14 @@ function Bar:OnLoad(cfg, benign)
         if button then 
 			buttonIndex = buttonIndex + 1
             button.id = id -- Crucial: Set ID so WrapperMixin:SetSize finds layoutData
+            listed[button] = true
             button.isMainButton = true -- Bypass automatic hiding/ghosting
 			button:SetAttribute("modifier", modString)
-            button:SetAlpha(1)
+            button:SetAlpha(layoutData.showOn and 0 or 1)
             button:Show()
 			button:SetAttribute("static", layoutData.static)
+			button:SetAttribute("showOn", layoutData.showOn)
+			button:SetAttribute("hideOn", layoutData.hideOn)
 
 			self:SetFrameRef("child"..buttonIndex, button)
         end
@@ -439,6 +451,19 @@ function Bar:OnLoad(cfg, benign)
         wrapper:SetSwipeColor(unpack(cfg.swipeRGB or {r, g, b, 1}))
         wrapper:SetBorderColor(unpack(cfg.borderRGB or {1, 1, 1, 1}))
     end
+
+	-- Crossbar layouts only show the buttons they list
+	if cfg.isTriple then
+		for _, wrapper in ipairs(self.Buttons) do
+			for _, button in pairs(wrapper.Buttons) do
+				if not listed[button] then
+					button.isMainButton = nil
+					button:SetAlpha(0)
+					button:Hide()
+				end
+			end
+		end
+	end
 
 	-- Strip _childupdate-state from non-promoted buttons only
 	for _, wrapper in ipairs(self.Buttons) do
@@ -509,7 +534,7 @@ function Bar:UpdateDividerFocus(newstate)
         [""] = "M0", 
         ["SHIFT-"] = "M1", 
         ["CTRL-"] = "M2",
-        ["CTRL-SHIFT-"] = "M0" -- Usually center is default for double mods in Triple
+        ["CTRL-SHIFT-"] = cfg.bothModsState or "M0" -- Usually center is default for double mods in Triple
     }
     local currentMod = modMap[newstate] or "M0"
 
