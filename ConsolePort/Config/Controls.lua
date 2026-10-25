@@ -757,7 +757,10 @@ db.PANELS[#db.PANELS + 1] = {name = 'Controls', header = SETTINGS, mixin = Windo
 
 		local mouseCvarOffset = #Controls.Events
 		local padding = 28
+		local ROWS_PER_COLUMN = 18
+		local COLUMN_WIDTH = 330
 		Controls.General = {}
+		GeneralModule.Entries = {}
 		for i, setting in pairs(GetAddonSettings()) do
 			if setting.cvar then
 				local check = CreateFrame('CheckButton', '$parentGeneralSetting'..i, GeneralModule, 'ChatConfigCheckButtonTemplate')
@@ -772,15 +775,61 @@ db.PANELS[#db.PANELS + 1] = {name = 'Controls', header = SETTINGS, mixin = Windo
 					mouseCvarOffset = mouseCvarOffset + 1
 					check:SetPoint('TOPLEFT', Controls.MouseModule, 'TOPLEFT', 24, -30*mouseCvarOffset-18)
 				else
-					check:SetPoint('TOPLEFT', 24, -padding*i-12)
+					tinsert(GeneralModule.Entries, {widget = check, text = setting.desc})
 				end
 				tinsert(Controls.General, check)
 			else
 				local text = GeneralModule:CreateFontString('$parentGeneralSetting'..i, 'OVERLAY', 'GameFontNormalLeftOrange')
 				text:SetText(setting.desc)
-				text:SetPoint('TOPLEFT', 24, -padding*i-24)
+				tinsert(GeneralModule.Entries, {widget = text, text = setting.desc, isHeader = true})
 			end
 		end
+
+		-- Lay out the settings in two columns, showing only those matching the search
+		function GeneralModule:Layout(query)
+			query = query and query:lower():gsub('^%s+', ''):gsub('%s+$', '') or ''
+			local row = 0
+			for _, entry in ipairs(self.Entries) do
+				local shown = (query == '') or (not entry.isHeader and entry.text:lower():find(query, 1, true))
+				local widget = entry.widget
+				widget:ClearAllPoints()
+				if shown then
+					row = row + 1
+					local column = (row > ROWS_PER_COLUMN) and 1 or 0
+					local y = -padding * ((row - 1) % ROWS_PER_COLUMN + 1)
+					if entry.isHeader then
+						widget:SetPoint('TOPLEFT', 24 + column * COLUMN_WIDTH, y - 24)
+					else
+						widget:SetPoint('TOPLEFT', 24 + column * COLUMN_WIDTH, y - 12)
+					end
+					widget:Show()
+				else
+					widget:Hide()
+				end
+			end
+		end
+
+		-- Search box next to the header
+		local search = CreateFrame('EditBox', '$parentSearch', GeneralModule, 'InputBoxTemplate')
+		search:SetSize(180, 20)
+		search:SetAutoFocus(false)
+		search:SetPoint('TOPRIGHT', -40, -22)
+		search.Hint = search:CreateFontString(nil, 'OVERLAY', 'GameFontDisableSmall')
+		search.Hint:SetPoint('LEFT', 4, 0)
+		search.Hint:SetText(SEARCH or 'Search')
+		search:SetScript('OnTextChanged', function(self)
+			local text = self:GetText()
+			CPAPI.SetShown(self.Hint, text == '')
+			GeneralModule:Layout(text)
+		end)
+		search:SetScript('OnEscapePressed', function(self)
+			self:SetText('')
+			self:ClearFocus()
+		end)
+		search:SetScript('OnEnterPressed', search.ClearFocus)
+		GeneralModule.Search = search
+
+		GeneralModule:Layout()
 	end
 
 	------------------------------------------------------------------------------------------------------------------------------

@@ -83,5 +83,6 @@ Frames\Helper.lua
 Frames\Nameplate.lua
 Frames\PixelBridge.lua
 Frames\Crosshair.lua
+Frames\ControllerTest.lua
 
 Plugins\Plugins.xml
