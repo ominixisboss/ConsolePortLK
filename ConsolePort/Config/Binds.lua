@@ -546,6 +546,14 @@ local function RefreshProfileList(self)
 			Preset = true,
 		}
 	end
+	-- add binding presets ported from modern ConsolePort
+	for name, data in pairs(db.BindingPresets or {}) do
+		profiles["|cFFFFFFFF"..name.."|r"..TUTORIAL.PROFILEPRESET] = {
+			Type = data.Type,
+			BindingSet = data.Bindings,
+			Preset = true,
+		}
+	end
 	-- add empty preset
 	profiles["|cFFFFFFFF"..EMPTY.."|r"..TUTORIAL.PROFILEPRESET] = {
 		BindingSet = {},

@@ -9,4 +9,6 @@
 	<Script file="STEAMDECK\SteamDeck.lua"/>
 	<Script file="SWITCH\Switch.lua"/>
 	<Script file="WII\WII.lua"/>
+	<!-- Binding presets ported from modern ConsolePort -->
+	<Script file="Shared\ModernPresets.lua"/>
 </Ui>
